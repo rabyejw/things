@@ -1,0 +1,6 @@
+Run Minecraft with NVIDIA GPU:
+https://askubuntu.com/questions/1108043/running-java-minecraft-with-the-nvidia-gpu
+
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia minecraft-launcher
+
+# install minecraft download fabric mod loader with sodium renderer and worldedit
