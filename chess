@@ -1,0 +1,134 @@
+
+# NVIDIA DRIVERS ON g7 # sudo apt install nvidia-driver nvidia-cuda-toolkit # nvidia-cudnn
+# I got 791556.gz and bt4-1024 lc0 file running without cudnn installed
+
+sudo apt install googletest
+
+# lc0
+sudo apt install nvidia-cuda-toolkit nvidia-cudnn
+
+sudo apt install libgtest-dev
+sudo apt install git-all zip unzip tar meson ninja-build zlib1g zlib1g-dev
+
+SHUTDOWN AND REBOOT COMPUTER BECAUSE OF NOUVEAU NVIDIA DRIVERS
+
+NOW CHECK IF THERE IS A NEWER VERSION OF THE URL OF SOURCE CODE OF LC0 AND CHANGE THE VERSION
+
+cd
+mkdir chess
+cd chess
+git clone -b release/0.31 --recurse-submodules https://github.com/LeelaChessZero/lc0.git
+cd lc0
+./build.sh > building_lc0_log.txt 2>&1
+cd build
+ls
+cd release
+./lc0
+go nodes 10000
+
+***after this you will have to move the .dll files from the windows download on the lc0 github to the release folder where the ./lc0 will be run which will probably be the release folder in build
+/home/lc0/build/release     paste them in here and ALSO GET A NN FILE .pb.gz for analysis
+
+curl https://github.com/LeelaChessZero/lc0/releases/download/v0.31.0-rc1/lc0-v0.31.0-rc1-windows-gpu-nvidia-cuda.zip
+*** unzip and take out the .dll files
+******* also update this to a new version if new version updates
+
+***Now we are going to install nibbler
+
+cd
+curl -L https://raw.githubusercontent.com/rooklift/nibbler/master/files/scripts/install.sh | bash
+
+pin the nibbler config file to dolphin
+
+{
+	"/home/***/chess/lc0/build/release/lc0": {
+		"args": [],
+		"options": {
+			"Backend": "cuda-fp16",
+			"CPuct": "2.9",
+			"CPuctBase": "45669",
+			"CPuctFactor": "3.973",
+			"MinibatchSize": "160",
+			"MaxPrefetch": "37",
+			"FpuValue": "0.98416",
+			"PolicyTemperature": "1.4",
+			"TaskWorkers": "3",
+			"SmartPruningFactor": "2",
+			"SmartPruningMinimumBatches": "300",
+			"RamLimitMb": "12000",
+			"Move Overhead": "1000",
+			"SyzygyPath": "",
+			"Syzygy50MoveRule": "true",
+			"SyzygyProbeLimit": "5"
+		},
+		"search_nodes": null,
+		"search_nodes_special": 5000,
+		"limit_by_time": true
+	},
+	"/home/***/chess/Stockfish/src/stockfish": {
+		"args": [],
+		"options": {
+			"MultiPV": 1,
+			"Threads": 10,
+			"Hash": 4096,
+			"Move Overhead": "1000",
+			"SyzygyPath": "",
+			"Syzygy50MoveRule": "true",
+			"SyzygyProbeLimit": "5"
+		},
+		"search_nodes": null,
+		"search_nodes_special": 5000,
+		"limit_by_time": true
+	}
+}
+
+
+
+# stockfish
+
+git clone https://github.com/official-stockfish/Stockfish
+cd Stockfish
+cd src
+make -j 12 profile-build
+
+seems like:
+make ARCH=x86-64-bmi2 COMP=gcc profileclean
+
+https://tests.stockfishchess.org/tests
+https://chess.massimilianogoi.com/download/tablebases/
+https://abrok.eu/stockfish/
+
+
+# nvidia-cuda-toolkit nvidia-cudnn nvidia-smi
+
+
+cd
+cd chess
+sudo rm -rf cutechess
+git clone https://github.com/cutechess/cutechess.git
+cd cutechess
+mkdir build
+cd build
+cmake -G Ninja ..
+ninja
+cd
+
+cd
+cd chess
+sudo rm -rf Stockfish
+git clone https://github.com/official-stockfish/Stockfish
+cd Stockfish/src
+make -j 12 profile-build ARCH=x86-64-bmi2
+./stockfish
+
+cd
+sudo rm -rf lc0
+git clone https://github.com/LeelaChessZero/lc0
+cd lc0
+sudo ./build.sh
+cd build
+cd release
+./lc0
+go nodes 100
+quit
+cd
